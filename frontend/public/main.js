@@ -7,7 +7,8 @@ function createWindow () {
     height: 600,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    autoHideMenuBar: true
   })
 
   //load the index.html from a url

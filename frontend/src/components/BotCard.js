@@ -9,10 +9,10 @@ export default function BotCard(props) {
     return (
         <Card>
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h5" component="div" noWrap>
                     {props.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" height="100px">
+                <Typography variant="body2" color="text.secondary" height="100px" sx={{overflow: "hidden"}}>
                     {props.description}
                 </Typography>
                 <Box sx={{border: "1px solid", borderRadius: '5px', borderColor: statusColors[props.status] || 'gray'}}>
