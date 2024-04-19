@@ -1,0 +1,30 @@
+import { Box, Card, CardContent, Typography, CardActions, Button } from "@mui/material";
+
+export default function BotCard(props) {
+    const statusColors = {
+        'Running': 'green',
+        'Stopped': 'red'
+    };
+
+    return (
+        <Card>
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                    {props.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" height="100px">
+                    {props.description}
+                </Typography>
+                <Box sx={{border: "1px solid", borderRadius: '5px', borderColor: statusColors[props.status] || 'gray'}}>
+                    <Typography variant="body2" color="text.secondary">
+                        Status: {props.status}
+                    </Typography>
+                </Box>
+            </CardContent>
+            <CardActions>
+                <Button variant="contained" size="small">Start</Button>
+                <Button variant="contained" size="small">Stop</Button>
+            </CardActions>
+        </Card>
+    );
+}
