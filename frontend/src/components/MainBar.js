@@ -118,7 +118,7 @@ function ResponsiveAppBar(props) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            BOT HUB
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {props.routes.map((route) => (

@@ -2,8 +2,8 @@ import { Box, Card, CardContent, Typography, CardActions, Button } from "@mui/ma
 
 export default function BotCard(props) {
     const statusColors = {
-        'Running': 'green',
-        'Stopped': 'red'
+        'RUNNING': 'green',
+        'STOPPED': 'red'
     };
 
     return (
@@ -22,8 +22,8 @@ export default function BotCard(props) {
                 </Box>
             </CardContent>
             <CardActions>
-                <Button variant="contained" size="small">Start</Button>
-                <Button variant="contained" size="small">Stop</Button>
+                <Button variant="contained" size="small" onClick={props.onStart}>Start</Button>
+                <Button variant="contained" size="small" onClick={props.onStop}>Stop</Button>
             </CardActions>
         </Card>
     );
