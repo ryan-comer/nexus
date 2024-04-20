@@ -1,6 +1,30 @@
 {
   "name": "frontend",
-  "main": "public/main.js",
+  "main": "./public/electron.js",
+  "homepage": "./",
+  "build": {
+    "appId": "bot.hub",
+    "productName": "BotHub",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "extraFiles": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,7 +36,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
-    "electron": "^30.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
@@ -24,7 +47,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "electron": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +70,7 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "electron": "^30.0.1"
   }
 }

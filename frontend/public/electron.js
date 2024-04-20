@@ -1,4 +1,6 @@
 const { app, BrowserWindow } = require('electron')
+const path = require('path')
+const url = require('url')
 
 function createWindow () {
   // Create the browser window.
@@ -11,8 +13,14 @@ function createWindow () {
     autoHideMenuBar: true
   })
 
-  //load the index.html from a url
-  win.loadURL('http://localhost:3000');
+  const appURL = app.isPackaged
+  ? url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }) : 'http://localhost:3000';
+
+  win.loadURL(appURL)
 }
 
 // Set the environment variable for the Flask port
@@ -20,8 +28,9 @@ process.env.BOT_HUB_PORT = 5000;
 
 // Start the backend Flask server
 const { spawn } = require('child_process');
-const path = require('path');
-const backendPath = path.join(__dirname, '..', '..', 'backend', 'app.py');
+// Get path to electron built executable
+const electronPath = app.getPath('exe');
+const backendPath = app.isPackaged ? path.join(electronPath, '..', 'backend', 'app.py') : path.join(__dirname, '..', '..', 'backend', 'app.py');
 const backendProcess = spawn('python', [backendPath]);
 
 // Print the output of the backend server
