@@ -3,8 +3,8 @@
   "main": "./public/electron.js",
   "homepage": "./",
   "build": {
-    "appId": "bot.hub",
-    "productName": "BotHub",
+    "appId": "nexus",
+    "productName": "Nexus",
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -34,7 +34,7 @@
       ]
     }
   },
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",

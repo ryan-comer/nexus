@@ -4,8 +4,8 @@ import random
 import time
 import threading
 
-name = 'AFK Bot'
-description = 'Bot that sends an AFK message to users who mention you while you are away.'
+name = 'Anti-AFK Bot'
+description = 'Bot that presses w, a, s, d randomly at a random interval'
 
 # AFK bot class
 class AFKBot(Bot):

@@ -96,7 +96,7 @@ function ResponsiveAppBar(props) {
               textDecoration: 'none',
             }}
           >
-            BOT HUB
+            NEXUS
           </Typography>
 
             </Menu>
@@ -118,7 +118,7 @@ function ResponsiveAppBar(props) {
               textDecoration: 'none',
             }}
           >
-            BOT HUB
+            NEXUS
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {props.routes.map((route) => (
