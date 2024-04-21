@@ -1,14 +1,22 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
-const url = require('url')
+const { app, BrowserWindow } = require('electron');
+const log = require('electron-log');
+const {autoUpdater} = require("electron-updater");
+const path = require('path');
+const url = require('url');
 
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
+
+let win;
 function createWindow () {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false,
     },
     autoHideMenuBar: true
   })
@@ -59,6 +67,10 @@ const pingServer = async () => {
   }
 };
 pingServer();
+
+app.on('ready', () => {
+  autoUpdater.checkForUpdatesAndNotify();
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -22,7 +22,16 @@
       }
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "ryan-comer",
+          "repo": "nexus",
+          "releaseType": "release",
+          "private": true
+        }
+      ]
     }
   },
   "version": "0.1.0",
@@ -36,6 +45,9 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
+    "electron-log": "^5.1.2",
+    "electron-logger": "^0.0.3",
+    "electron-updater": "^6.1.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
@@ -49,7 +61,8 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "publish": "electron-builder --publish=always"
   },
   "eslintConfig": {
     "extends": [
