@@ -64,7 +64,7 @@ def check_ping():
 
 if __name__ == '__main__':
     # Get the port from the environment variable
-    port = os.environ.get('BOT_HUB_PORT')
+    port = os.environ.get('NEXUS_BACKEND_PORT')
 
     if port is None:
         print('No port specified in the environment variable, please specify one')

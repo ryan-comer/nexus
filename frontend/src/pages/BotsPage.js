@@ -4,34 +4,13 @@ import BotCard from "../components/BotCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-/*
-const bots = [
-    {
-        id: 1,
-        name: "Anti-AFK Bot",
-        description: "This bot prevents you from going AFK by moving your character every few minutes.",
-        status: "Running"
-    },
-    {
-        id: 2,
-        name: "Bot 2",
-        description: "This is the second bot",
-        status: "Stopped"
-    },
-    {
-        id: 3,
-        name: "Bot 3",
-        description: "This is the third bot",
-        status: "Stopped"
-    }
-]
-*/
-
 export default function BotsPage(props) {
     const [bots, setBots] = useState([]);
+    const nexusBackendPort = window.nexusBackendPort;
+    console.log(`Nexus backend port: ${nexusBackendPort}`);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/bots")
+        axios.get(`http://localhost:${nexusBackendPort}/bots`)
             .then((response) => {
                 setBots(response.data);
             })
@@ -41,7 +20,7 @@ export default function BotsPage(props) {
     }, []);
 
     function startBot(name) {
-        axios.post(`http://localhost:5000/bots/start`, {name: name})
+        axios.post(`http://localhost:${nexusBackendPort}/bots/start`, {name: name})
             .then((response) => {
                 console.log(response.data);
                 setBots(bots.map((bot) => {
@@ -57,7 +36,7 @@ export default function BotsPage(props) {
     }
 
     function stopBot(name) {
-        axios.post(`http://localhost:5000/bots/stop`, {name: name})
+        axios.post(`http://localhost:${nexusBackendPort}/bots/stop`, {name: name})
             .then((response) => {
                 console.log(response.data);
                 setBots(bots.map((bot) => {

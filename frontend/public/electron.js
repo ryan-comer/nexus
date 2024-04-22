@@ -1,15 +1,29 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, contextBridge } = require('electron');
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 const path = require('path');
 const url = require('url');
 const { exec, spawn } = require('child_process');
+const net = require('net');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
 const virtualEnvPath = app.isPackaged ? path.join(app.getPath('exe'), '..', 'backend', 'venv') : path.join(__dirname, '..', '..', 'backend', 'venv');
+let nexusBackendPort;
+
+// Find a free port for the Flask server
+function getFreePort() {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.listen(0, () => {
+      const port = server.address().port;
+      server.close();
+      resolve(port);
+    });
+  });
+}
 
 let win;
 function createWindow () {
@@ -20,6 +34,7 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js')
     },
     autoHideMenuBar: true
   })
@@ -35,9 +50,9 @@ function createWindow () {
 }
 
 // Start the backend server
-function startBackend() {
-  // Set the environment variable for the Flask port
-  process.env.BOT_HUB_PORT = 5000;
+function startBackend(port=5000) {
+  // Set the environment variable for the Flask server
+  process.env.NEXUS_BACKEND_PORT = port;
 
   // Start the backend Flask server
   // Get path to electron built executable
@@ -75,12 +90,12 @@ function checkPython() {
 }
 
 // Wait until you're able to ping the server
-function waitForBackend() {
+function waitForBackend(port) {
   return new Promise((resolve, reject) => {
     const axios = require('axios');
     const pingServer = async () => {
       try {
-        await axios.get('http://localhost:5000/ping');
+        await axios.get(`http://localhost:${port}/ping`);
         console.log("Creating Flask server")
       } catch (error) {
         console.error(error);
@@ -161,8 +176,13 @@ app.whenReady().then(() => {
   checkPython().then((pythonInstalled) => {
     if (pythonInstalled) {
       checkVirtualEnv(virtualEnvPath).then(() => {
-        startBackend();
-        waitForBackend().then(createWindow);
+        getFreePort().then((port) => {
+          // Save the port so that the BrowserWindow can access it
+          nexusBackendPort = port
+          console.log(`Backend port: ${port}`);
+          startBackend(port);
+          waitForBackend(port).then(createWindow);
+        });
       });
     } else {
       dialog.showMessageBox({
