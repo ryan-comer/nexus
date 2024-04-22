@@ -9,6 +9,8 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
+const virtualEnvPath = app.isPackaged ? path.join(app.getPath('exe'), '..', 'backend', 'venv') : path.join(__dirname, '..', '..', 'backend', 'venv');
+
 let win;
 function createWindow () {
   // Create the browser window.
@@ -41,7 +43,8 @@ function startBackend() {
   // Get path to electron built executable
   const electronPath = app.getPath('exe');
   const backendPath = app.isPackaged ? path.join(electronPath, '..', 'backend', 'app.py') : path.join(__dirname, '..', '..', 'backend', 'app.py');
-  const backendProcess = spawn('python', [backendPath]);
+  const pythonPath = path.join(virtualEnvPath, 'Scripts', 'python');
+  const backendProcess = spawn(pythonPath, [backendPath]);
 
   // Print the output of the backend server
   backendProcess.stdout.setEncoding('utf-8');
@@ -71,8 +74,6 @@ function checkPython() {
   });
 }
 
-
-
 // Wait until you're able to ping the server
 function waitForBackend() {
   return new Promise((resolve, reject) => {
@@ -89,6 +90,52 @@ function waitForBackend() {
       resolve();
     };
     pingServer();
+  });
+}
+
+// Create a virtual environment
+function createVirtualEnv(virtualEnvPath='venv') {
+  console.log('Creating virtual environment');
+  return new Promise((resolve, reject) => {
+    exec(`python -m venv ${virtualEnvPath}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error creating virtual environment: ${error}`);
+        reject();
+      } else {
+        console.log('Virtual environment created');
+
+        // Install the required packages
+        const requirementsPath = path.join(virtualEnvPath, '..', 'requirements.txt')
+        console.log("Installing requirements into virtual environment");
+        exec(`${path.join(virtualEnvPath, 'Scripts', 'pip')} install -r ${requirementsPath}`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error installing requirements: ${error}`);
+            reject();
+          } else {
+            console.log('Requirements installed');
+            resolve();
+          }
+        });
+      }
+    });
+  });
+}
+
+// Check for a virtual Python environment
+function checkVirtualEnv(virtualEnvPath='venv') {
+  // Check if the virtual environment exists
+  return new Promise((resolve, reject) => {
+    exec(`ls ${virtualEnvPath}`, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`Virtual environment not found: ${virtualEnvPath}`);
+        createVirtualEnv(virtualEnvPath).then(() => {
+          resolve();
+        });
+      } else {
+        console.log(`Virtual environment found: ${virtualEnvPath}`);
+        resolve();
+      }
+    });
   });
 }
 
@@ -113,8 +160,10 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
   checkPython().then((pythonInstalled) => {
     if (pythonInstalled) {
-      startBackend();
-      waitForBackend().then(createWindow);
+      checkVirtualEnv(virtualEnvPath).then(() => {
+        startBackend();
+        waitForBackend().then(createWindow);
+      });
     } else {
       dialog.showMessageBox({
         type: 'error',
