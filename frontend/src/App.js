@@ -7,6 +7,9 @@ import HomePage from './pages/HomePage';
 import BotsPage from './pages/BotsPage';
 import MainBar from './components/MainBar';
 
+import { Provider } from 'react-redux';
+import store from './store';
+
 const routes = [
   {
     path: "/",
@@ -23,14 +26,16 @@ const routes = [
 function App() {
   return (
     <div className="App">
-      <Router>
-        <MainBar routes={routes}/>
-        <Routes>
-          {routes.map((route) => (
-            <Route key={route.path} path={route.path} element={route.component()}/>
-          ))}
-        </Routes>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <MainBar routes={routes}/>
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.component()}/>
+            ))}
+          </Routes>
+        </Router>
+      </Provider>
     </div>
   );
 }

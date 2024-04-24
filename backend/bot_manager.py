@@ -1,5 +1,7 @@
 from bots.bot import BotStatus
 from threading import Thread
+import json
+import os
 
 # Class to manage the bots
 class BotManager():
@@ -16,11 +18,7 @@ class BotManager():
         bot_list = []
 
         for bot in self.bots:
-            bot_list.append({
-                'name': bot.get_name(),
-                'description': bot.get_description(),
-                'status': bot.get_status().name
-            })
+            bot_list.append(bot.__json__())
 
         return bot_list
 
@@ -55,3 +53,37 @@ class BotManager():
                 return True
 
         return False
+
+    def load_all_settings(self):
+        # Check if the bot settings folder named 'bot_settings' exists
+        if not os.path.exists('bot_settings'):
+            return False
+
+        # Load the bot settings from a file
+        for bot in self.bots:
+            bot_name = bot.get_name()
+            if not os.path.exists(f'bot_settings/{bot_name}.json'):
+                continue
+
+            with open(f'bot_settings/{bot_name}.json', 'r') as f:
+                settings = json.load(f)
+                bot.save_settings(settings)
+
+        return True
+
+    # Save bot settings
+    def save_settings(self, bot_name, settings):
+        # Save the bot settings to the bot
+        for bot in self.bots:
+            if bot.get_name() == bot_name:
+                bot.save_settings(settings)
+
+        # Check if the bot settings folder named 'bot_settings' exists
+        if not os.path.exists('bot_settings'):
+            os.makedirs('bot_settings')
+
+        # Save the bot settings to a file
+        with open(f'bot_settings/{bot_name}.json', 'w') as f:
+            json.dump(settings, f)
+
+        return True

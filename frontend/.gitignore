@@ -12,6 +12,8 @@
 /build
 /dist
 
+/bot_settings
+
 # misc
 .DS_Store
 .env.local

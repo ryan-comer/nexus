@@ -21,6 +21,9 @@ bot_manager = BotManager()
 # Register the bots
 bot_manager.add_bot(AFKBot())
 
+# Load the bot settings
+bot_manager.load_all_settings()
+
 # Route to get the list of bots
 @app.route('/bots', methods=['GET'])
 def get_bots():
@@ -46,6 +49,17 @@ def stop_bot():
     else:
         return Response(status=404)
 
+# Route to save bot settings
+@app.route('/bots/settings', methods=['POST'])
+def save_settings():
+    bot_name = request.json['name']
+    settings = request.json['settings']
+
+    if bot_manager.save_settings(bot_name, settings):
+        return Response(status=200)
+
+    return Response(status=404)
+
 # Kill the server if it didn't receive a ping in the last 10 seconds
 @app.route('/ping', methods=['GET'])
 def ping():
@@ -64,7 +78,7 @@ def check_ping():
 
 if __name__ == '__main__':
     # Get the port from the environment variable
-    port = os.environ.get('NEXUS_BACKEND_PORT')
+    port = os.environ.get('NEXUS_BACKEND_PORT', 5000)
 
     if port is None:
         print('No port specified in the environment variable, please specify one')

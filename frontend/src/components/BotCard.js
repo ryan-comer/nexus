@@ -1,4 +1,5 @@
-import { Box, Card, CardContent, Typography, CardActions, Button } from "@mui/material";
+import { Box, Card, CardContent, Typography, CardActions, Button, IconButton } from "@mui/material";
+import { Settings as SettingsIcon } from '@mui/icons-material';
 
 export default function BotCard(props) {
     const statusColors = {
@@ -9,6 +10,11 @@ export default function BotCard(props) {
     return (
         <Card>
             <CardContent>
+                <Box sx={{display: 'flex', width: '100%', justifyContent: 'right'}}>
+                    <IconButton onClick={props.onSettings}>
+                        <SettingsIcon/>
+                    </IconButton>
+                </Box>
                 <Typography gutterBottom variant="h5" component="div" noWrap>
                     {props.name}
                 </Typography>
