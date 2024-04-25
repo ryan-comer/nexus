@@ -54,9 +54,17 @@ class Bot:
         return self.settings
 
     def save_settings(self, settings):
+        new_settings_map = {}
         for setting in settings:
             if setting['type'] == SETTING_TYPE.NUMBER.name:
-                self.setting_values[setting['name']] = float(setting['value'])
+                new_settings_map[setting['name']] = float(setting['value'])
+
+        result = self.validate_settings(new_settings_map)
+        if result is not None:
+            return result
+
+        self.setting_values = new_settings_map
+        return None
 
     def get_setting_value(self, setting_name):
         return self.setting_values[setting_name]

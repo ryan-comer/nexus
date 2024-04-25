@@ -55,10 +55,12 @@ def save_settings():
     bot_name = request.json['name']
     settings = request.json['settings']
 
-    if bot_manager.save_settings(bot_name, settings):
+    result = bot_manager.save_settings(bot_name, settings)
+
+    if result is None:
         return Response(status=200)
 
-    return Response(status=404)
+    return Response(result, status=400)
 
 # Kill the server if it didn't receive a ping in the last 10 seconds
 @app.route('/ping', methods=['GET'])

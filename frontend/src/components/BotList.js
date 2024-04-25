@@ -56,7 +56,7 @@ export default function BotList(props) {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            border: '2px solid black',
+            border: '2px solid gray',
             backgroundColor: 'white',
             borderRadius: '5px',
             boxShadow: 24,

@@ -39,7 +39,7 @@ class BotManager():
     # Stop a bot
     def stop_bot(self, bot_name):
         for bot in self.bots:
-            if bot.get_name() == bot_name:
+            if bot.get_name() == bot_name and bot.status == BotStatus.RUNNING:
                 bot.stop()
 
                 # Wait for the bot thread to finish
@@ -76,7 +76,9 @@ class BotManager():
         # Save the bot settings to the bot
         for bot in self.bots:
             if bot.get_name() == bot_name:
-                bot.save_settings(settings)
+                result = bot.save_settings(settings)
+                if result is not None:
+                    return result
 
         # Check if the bot settings folder named 'bot_settings' exists
         if not os.path.exists('bot_settings'):
@@ -86,4 +88,4 @@ class BotManager():
         with open(f'bot_settings/{bot_name}.json', 'w') as f:
             json.dump(settings, f)
 
-        return True
+        return None

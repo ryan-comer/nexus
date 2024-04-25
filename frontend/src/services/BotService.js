@@ -8,6 +8,7 @@ export function startBot(name) {
             })
             .catch((error) => {
                 console.error(error);
+                reject(error);
             });
     });
 }
@@ -20,6 +21,7 @@ export function stopBot(name) {
             })
             .catch((error) => {
                 console.error(error);
+                reject(error);
             });
     });
 }
@@ -32,6 +34,7 @@ export function saveBotSettings(name, settings) {
             })
             .catch((error) => {
                 console.error(error);
+                reject(error);
             });
     });
 }
@@ -44,6 +47,7 @@ export function getBots() {
             })
             .catch((error) => {
                 console.error(error);
+                reject(error);
             });
     });
 }

@@ -45,3 +45,17 @@ class AFKBot(Bot):
     def stop(self):
         self.running = False
         self.thread_event.set()
+
+    def validate_settings(self, settings):
+        wait_time_min = settings['wait_time_min']
+        wait_time_max = settings['wait_time_max']
+
+        if wait_time_min < 0:
+            return 'Minimum wait time must be greater than or equal to 0'
+        if wait_time_max < 0:
+            return 'Maximum wait time must be greater than or equal to 0'
+        if wait_time_max < wait_time_min:
+            return 'Maximum wait time must be greater than or equal to minimum wait time'
+
+        return None
+        

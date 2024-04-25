@@ -5,6 +5,7 @@ const path = require('path');
 const url = require('url');
 const { exec, spawn } = require('child_process');
 const net = require('net');
+const fs = require('fs');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
@@ -98,7 +99,7 @@ function waitForBackend(port) {
         await axios.get(`http://localhost:${port}/ping`);
         console.log("Creating Flask server")
       } catch (error) {
-        console.error(error);
+        console.log("Waiting for Flask server...")
         setTimeout(pingServer, 1000);
       }
 
@@ -140,17 +141,17 @@ function createVirtualEnv(virtualEnvPath='venv') {
 function checkVirtualEnv(virtualEnvPath='venv') {
   // Check if the virtual environment exists
   return new Promise((resolve, reject) => {
-    exec(`ls ${virtualEnvPath}`, (error, stdout, stderr) => {
-      if (error) {
-        console.log(`Virtual environment not found: ${virtualEnvPath}`);
-        createVirtualEnv(virtualEnvPath).then(() => {
-          resolve();
-        });
-      } else {
-        console.log(`Virtual environment found: ${virtualEnvPath}`);
+    // Check if the virtual environment exists
+    const venvExists = fs.existsSync(virtualEnvPath);
+    if (!venvExists) {
+      console.log(`Virtual environment not found: ${virtualEnvPath}`);
+      createVirtualEnv(virtualEnvPath).then(() => {
         resolve();
-      }
-    });
+      });
+    } else {
+      console.log(`Virtual environment found: ${virtualEnvPath}`);
+      resolve();
+    }
   });
 }
 

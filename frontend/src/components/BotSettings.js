@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, IconButton, Button, TextField } from "@mui/material";
+import { Typography, Box, Grid, IconButton, Button, TextField, Tooltip } from "@mui/material";
 import { Close as CloseIcon } from '@mui/icons-material';
 import { saveBotSettings } from "../services/BotService";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { useState } from "react";
 export default function BotSettings(props) {
     const [settings, setSettings] = useState([...props.bot.settings])
     const [showMessage, setShowMessage] = useState(false);
+    const [error, setError] = useState(null);
 
     function save() {
         saveBotSettings(props.bot.name, settings).then(() => {
@@ -14,7 +15,10 @@ export default function BotSettings(props) {
                 setShowMessage(false);
             }, 2000);
         }).catch((error) => {
-            console.error(error);
+            setError(error.response.data);
+            setTimeout(() => {
+                setError(null);
+            }, 4000);
         });
     }
 
@@ -43,9 +47,11 @@ export default function BotSettings(props) {
                         </Grid>
                         {setting.type === 'NUMBER' &&
                         <Grid item xs={6}>
-                            <TextField type="number" defaultValue={setting.value} onChange={(e) => updateSetting(setting.name, e.target.value)} sx={{
-                                maxWidth: '100px'
-                            }}/>
+                            <Tooltip title={setting.description}>
+                                <TextField variant="standard" type="number" defaultValue={setting.value} onChange={(e) => updateSetting(setting.name, e.target.value)} sx={{
+                                    maxWidth: '100px'
+                                }}/>
+                            </Tooltip>
                         </Grid>
                         }
                     </Grid>
@@ -57,6 +63,13 @@ export default function BotSettings(props) {
                         color: 'green'
                     }}
                 >Settings applied!</Typography>
+            }
+            {error &&
+                <Typography 
+                    sx={{
+                        color: 'red'
+                    }}
+                >{error}</Typography>
             }
             <Box sx={{padding: '10px', display: 'flex', justifyContent: 'right'}}>
                 <Button variant="contained" size="small" onClick={save}>Save</Button>
