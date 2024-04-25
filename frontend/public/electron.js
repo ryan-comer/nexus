@@ -37,7 +37,8 @@ function createWindow () {
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js')
     },
-    autoHideMenuBar: true
+    autoHideMenuBar: true,
+    icon: path.join(__dirname, 'icons/png/64x64.png')
   })
 
   const appURL = app.isPackaged

@@ -5,6 +5,7 @@
   "build": {
     "appId": "nexus",
     "productName": "Nexus",
+    "icon": "public/icons/win/icon.ico",
     "files": [
       "build/**/*",
       "node_modules/**/*"
