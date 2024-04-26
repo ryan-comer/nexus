@@ -62,11 +62,15 @@ export default function BotList(props) {
             boxShadow: 24,
             zIndex: 1000
         }}>
-            <BotSettings bot={botSettings} onClose={() => setBotSettings(null)}/>
+            <BotSettings bot={botSettings} onClose={() => setBotSettings(null)} onSave={() => {
+                getBots().then((response) => {
+                    dispatch(setBots(response));
+                });
+            }}/>
         </Box>}
         <Grid container spacing={3}>
             {bots.map((bot) => (
-                <Grid item xs={6} sm={3} md={2} key={bot.name}>
+                <Grid item xs={6} sm={3} xl={2} key={bot.name}>
                     <BotCard {...bot} 
                     onStart={() => startBotByName(bot.name)} 
                     onStop={() => stopBotByName(bot.name)}

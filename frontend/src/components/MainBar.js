@@ -11,7 +11,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -33,8 +32,9 @@ function ResponsiveAppBar(props) {
   const handleCloseNavMenu = (path) => {
     setAnchorElNav(null);
 
+    // Check if the path is a string
     if (path) {
-        navigate(path);
+      navigate(path);
     }
   };
 
@@ -46,7 +46,6 @@ function ResponsiveAppBar(props) {
     <AppBar position="static">
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -71,7 +70,7 @@ function ResponsiveAppBar(props) {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => setAnchorElNav(null)}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
@@ -101,12 +100,9 @@ function ResponsiveAppBar(props) {
 
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -121,6 +117,22 @@ function ResponsiveAppBar(props) {
             NEXUS
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Typography
+              variant="h5"
+              noWrap
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                mr: 2,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              NEXUS
+            </Typography>
             {props.routes.map((route) => (
               <Button
                 key={route.name}
@@ -131,7 +143,6 @@ function ResponsiveAppBar(props) {
               </Button>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

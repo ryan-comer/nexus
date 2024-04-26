@@ -14,6 +14,8 @@ export default function BotSettings(props) {
             setTimeout(() => {
                 setShowMessage(false);
             }, 2000);
+
+            props.onSave();
         }).catch((error) => {
             setError(error.response.data);
             setTimeout(() => {
@@ -22,6 +24,16 @@ export default function BotSettings(props) {
         });
     }
 
+    // Reset settings to default values
+    function defaults() {
+        const newSettings = settings.map((setting) => {
+            return {...setting, value: setting.default}
+        });
+
+        setSettings(newSettings);
+    }
+
+    // Update an individual setting
     function updateSetting(name, value) {
         let settingsCopy = [...settings];
         let settingIndex = settingsCopy.findIndex((s) => s.name === name);
@@ -48,7 +60,7 @@ export default function BotSettings(props) {
                         {setting.type === 'NUMBER' &&
                         <Grid item xs={6}>
                             <Tooltip title={setting.description}>
-                                <TextField variant="standard" type="number" defaultValue={setting.value} onChange={(e) => updateSetting(setting.name, e.target.value)} sx={{
+                                <TextField variant="standard" type="number" value={setting.value} onChange={(e) => updateSetting(setting.name, e.target.value)} sx={{
                                     maxWidth: '100px'
                                 }}/>
                             </Tooltip>
@@ -72,6 +84,7 @@ export default function BotSettings(props) {
                 >{error}</Typography>
             }
             <Box sx={{padding: '10px', display: 'flex', justifyContent: 'right'}}>
+                <Button sx={{marginRight: '10px'}} variant="contained" size="small" onClick={defaults}>Defaults</Button>
                 <Button variant="contained" size="small" onClick={save}>Save</Button>
             </Box>
         </Box>

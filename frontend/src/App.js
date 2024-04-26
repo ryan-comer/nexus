@@ -10,6 +10,8 @@ import MainBar from './components/MainBar';
 import { Provider } from 'react-redux';
 import store from './store';
 
+import { ThemeProvider, createTheme } from '@mui/material';
+
 const routes = [
   {
     path: "/",
@@ -23,18 +25,31 @@ const routes = [
   }
 ]
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#3c3c3c'
+    },
+    secondary: {
+      main: '#009820'
+    }
+  }
+})
+
 function App() {
   return (
     <div className="App">
       <Provider store={store}>
-        <Router>
-          <MainBar routes={routes}/>
-          <Routes>
-            {routes.map((route) => (
-              <Route key={route.path} path={route.path} element={route.component()}/>
-            ))}
-          </Routes>
-        </Router>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <MainBar routes={routes}/>
+            <Routes>
+              {routes.map((route) => (
+                <Route key={route.path} path={route.path} element={route.component()}/>
+              ))}
+            </Routes>
+          </Router>
+        </ThemeProvider>
       </Provider>
     </div>
   );
