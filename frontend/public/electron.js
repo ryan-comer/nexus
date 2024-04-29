@@ -120,19 +120,24 @@ function createVirtualEnv(virtualEnvPath='venv') {
         reject();
       } else {
         console.log('Virtual environment created');
+        resolve();
+      }
+    });
+  });
+}
 
-        // Install the required packages
-        const requirementsPath = path.join(virtualEnvPath, '..', 'requirements.txt')
-        console.log("Installing requirements into virtual environment");
-        exec(`${path.join(virtualEnvPath, 'Scripts', 'pip')} install -r ${requirementsPath}`, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error installing requirements: ${error}`);
-            reject();
-          } else {
-            console.log('Requirements installed');
-            resolve();
-          }
-        });
+// Install the required packages into the virtual environment
+function installRequirements(virtualEnvPath='venv') {
+  return new Promise((resolve, reject) => {
+    const requirementsPath = path.join(virtualEnvPath, '..', 'requirements.txt')
+    console.log("Installing requirements into virtual environment");
+    exec(`${path.join(virtualEnvPath, 'Scripts', 'pip')} install -r ${requirementsPath}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error installing requirements: ${error}`);
+        reject();
+      } else {
+        console.log('Requirements installed');
+        resolve();
       }
     });
   });
@@ -147,11 +152,21 @@ function checkVirtualEnv(virtualEnvPath='venv') {
     if (!venvExists) {
       console.log(`Virtual environment not found: ${virtualEnvPath}`);
       createVirtualEnv(virtualEnvPath).then(() => {
-        resolve();
+        installRequirements(virtualEnvPath).then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
       });
     } else {
       console.log(`Virtual environment found: ${virtualEnvPath}`);
-      resolve();
+      installRequirements(virtualEnvPath).then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
     }
   });
 }
