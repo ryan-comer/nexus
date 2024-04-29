@@ -5,6 +5,7 @@ import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
 import BotsPage from './pages/BotsPage';
+import NewsPage from './pages/NewsPage';
 import MainBar from './components/MainBar';
 
 import { Provider } from 'react-redux';
@@ -22,6 +23,12 @@ const routes = [
     path: "/bots",
     component: () => <BotsPage/>,
     name: "Bots"
+  },
+  {
+    path: "/news",
+    component: () => <NewsPage/>,
+    name: "News"
+
   }
 ]
 
