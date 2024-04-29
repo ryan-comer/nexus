@@ -8,12 +8,17 @@ import signal
 import threading
 import time
 
+from routes.news import news
+
 from bot_manager import BotManager
 from bots.afk_bot import AFKBot
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+# Register the route blueprints
+app.register_blueprint(news)
 
 # Create the bot manager
 bot_manager = BotManager()
