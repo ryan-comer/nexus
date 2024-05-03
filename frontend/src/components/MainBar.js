@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -21,6 +21,7 @@ function ResponsiveAppBar(props) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -134,13 +135,16 @@ function ResponsiveAppBar(props) {
               NEXUS
             </Typography>
             {props.routes.map((route) => (
-              <Button
-                key={route.name}
-                onClick={() => handleCloseNavMenu(route.path)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {route.name}
-              </Button>
+              <Box key={route.name}>
+                <Button
+                  onClick={() => handleCloseNavMenu(route.path)}
+                  sx={{ my: 0, color: 'white', display: 'block' }}
+                >
+                  {route.name}
+                </Button>
+                {location.pathname === route.path && <Box 
+                  sx={{ height: 2, width: '100%', backgroundColor: 'white', borderRadius: '5px' }} />}
+              </Box>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
